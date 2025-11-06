@@ -1,7 +1,10 @@
-#include <string>
+# Patch Notes
 
-using namespace std;
+## Part A
 
+#### A.1 Setup class declaration 
+
+```cpp
 //deklarera data 
 class Sensor {
     private:
@@ -20,3 +23,4 @@ class Sensor {
     //getter metod för hjälp
     string getName() const;
 };
+```
