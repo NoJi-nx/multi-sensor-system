@@ -16,6 +16,9 @@ class MeasurementStorage {
     //visar alla lagrad matvärden
     void printAll() const;
 
+    void printAll(const string& sensorName) const;
+    size_t size() const noexcept {return measurements.size(); }
+
     //analys, read.only tillgång
     const vector<Measurement>& data() 
     const { 
