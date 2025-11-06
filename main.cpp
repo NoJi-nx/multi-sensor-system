@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include "sensor.h"
 #include "measurement.h"
 #include "storage.h"
@@ -13,8 +15,8 @@ int main()
     srand(static_cast<unsigned int>(time(nullptr)));
 
     //skapa två sensor
-    Sensor tempSensor("TempSensor 1", "°C", -10.0, 40.0);
-    Sensor humiditySensor("HumiditySensor 1", "%", 0.0, 100.0);
+    Sensor tempSensor("Temperature 1", "°C", -10.0, 40.0);
+    Sensor humiditySensor("Humidity 1", "%", 0.0, 100.0);
 
     //Lagring 
     MeasurementStorage storage;
@@ -33,8 +35,15 @@ int main()
   storage.addMeasurement(m1);
    storage.addMeasurement(m2);
 
+   
+
    //demo
    storage.printAll();
+
+   cout << "\n";
+   storage.printStats("Temperature 1");
+   cout << "\n";
+   storage.printStats("Humidity 1");
 
     /*//visar värden
     cout << tempSensor.getName() <<":°C" << tempValue << " °C" << endl;
