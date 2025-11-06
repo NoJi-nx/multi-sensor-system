@@ -46,4 +46,19 @@ class MeasurementStorage {
     const { 
         return measurements; 
         }
+
+
+   //file I/O
+   bool saveToCSV(const string& filename) const;
+
+   //laddar mätvärden & ignorerar linjer
+   bool loadFromCSV(const string& filename);
+
+
+   void addReading(
+       const string& sensorName, const string& unit,
+       double value, const string& ts
+       ) {
+           measurements.push_back(Measurement{sensorName, unit, value, ts});
+       }
 };

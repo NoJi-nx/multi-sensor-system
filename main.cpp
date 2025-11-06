@@ -1,6 +1,10 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <unordered_set>
+#include <vector>
+#include <string>
+#include <limits>
 #include "sensor.h"
 #include "measurement.h"
 #include "storage.h"
@@ -8,6 +12,29 @@
 
 
 using namespace std;
+
+int meanuChoice(int min, int max) {
+    while (true) {
+        cout << "\nChoose (" << min << "-" << max << "): ";
+        int choice;
+        if (cin >> choice && choice >= min && choice <= max) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return choice;
+        }
+
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Invalid input!. Please enter a number between " << min << " and " << max << ".\n";
+    }
+}
+
+//prompt för text
+string readLine(const string& prompt){
+    cout << prompt;
+    string s;
+    getline(cin, s);
+    return s;
+}
 
 int main()
 {
@@ -18,8 +45,22 @@ int main()
     Sensor tempSensor("Temperature 1", "°C", -10.0, 40.0);
     Sensor humiditySensor("Humidity 1", "%", 0.0, 100.0);
 
-    //Lagring 
+    //lagring 
     MeasurementStorage storage;
+
+    //meny loop
+    while (true) {
+        cout << "\n------ MENU ------\n"
+             << "1. Read new measurements from all sensors\n"
+             << "2. Display statistics for a sensor\n"
+             << "3. Display all measurments\n"
+             << "4. Save measurements to CSV\n"
+             << "5. Load measurements from CSV\n"
+             << "6. Exit\n";
+
+     
+
+    }
 
     //Fel sensor
     //Sensor brokenSensor("FaultySensor", "°C", 50.0, -10.0); //Ta bort för testa

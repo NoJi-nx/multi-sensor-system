@@ -5,6 +5,8 @@
 #include <cmath> 
 #include <algorithm>
 #include <string>
+#include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -165,4 +167,79 @@ void MeasurementStorage::printAll(const string& sensorName) const {
     if (!any) {
         cout << "[No measurements stored for sensor: " << sensorName << "]\n";
     }
+}
+
+//hjälpmedel för analys
+static inline string trim(string s){
+    auto isspace_ = [](unsigned char c) {return isspace(c); };
+    s.erase(s.begin(), find_if(s.begin(), s.end(), [&](unsigned char c){return !isspace_(c);}));
+    s.erase(find_if(s.rbegin(), s.rend(), [&](unsigned char c){ return !isspace_(c);}).base(), s.end());
+    return s;
+}
+
+bool MeasurementStorage::saveToCSV(const string& filename) const {
+    ofstream out(filename);
+    if (!out) {
+        cerr << "Error. Could not open file for writing: " << filename << "\n";
+        return false;
+    }
+    //skriver i rader som visar datum och sensor
+    for (const auto& m: measurements) {
+        out << m.timestamp << ", "
+            << m.sensorName << ", "
+            << m.value << ", "
+            << m.unit << "\n";
+    }
+
+    return true;
+
+}
+
+bool MeasurementStorage::loadFromCSV(const string& filename) {
+    ifstream in(filename);
+    if (!in) {
+        cerr << "Error! Could not open fil for reading: " << filename << "\n";
+        return false;
+    }
+
+    string line;
+    size_t added = 0, skipped = 0;
+
+    while (getline(in, line)) {
+        if (line.empty()) {skipped++; continue;}
+
+        istringstream ss(line);
+        string ts, name, valueStr, unit;
+
+
+        //delar i 4 delar
+        if (!getline(ss, ts, ',')) {skipped++; continue;}
+        if (!getline(ss, name, ',')) {skipped++; continue;}
+        if (!getline(ss, valueStr, ',')) {skipped++; continue;}
+        if (!getline(ss, unit)) {skipped++; continue;}
+
+        ts = trim(ts);
+        name = trim(name);
+        valueStr= trim(valueStr);
+        unit = trim(unit);
+
+        //konvertera värde till double
+        double v = 0.0;
+        try {
+            v = stod(valueStr);
+        } catch (...) {
+            skipped;
+            continue; //ignorera nummerisk fält
+
+        }
+
+        //lägger till i lager
+        measurements.push_back(Measurement{name, unit, v, ts});
+        added++;
+    }
+
+    if (skipped > 0) {
+        cerr << "Info Loaded " << added << " rows; skipped" << skipped << " malformed rows.\n";
+    }
+    return true;
 }
