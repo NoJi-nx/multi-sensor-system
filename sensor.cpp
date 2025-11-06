@@ -1,3 +1,6 @@
+#include <stdexcept>
+#include <cstdlib>
+#include <iostream>
 #include "sensor.h"
 
 using namespace std;
@@ -28,6 +31,3 @@ double Sensor::read() const {
     return randomValue;
 }
 
-string Sensor::getName() const {
-    return name;
-}

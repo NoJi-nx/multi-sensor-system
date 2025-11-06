@@ -27,8 +27,8 @@ int main()
     double humidityValue = humiditySensor.read();
 
     //skapar matvärde för lagring
-    Measurement m1 { tempSensor.getName(), "°C", tempValue, currentTimeStamp() };
-    Measurement m2 { humiditySensor.getName(), "%", humidityValue, currentTimeStamp() };
+    Measurement m1 { tempSensor.getName(), tempSensor.getUnit(), tempValue, currentTimeStamp() };
+    Measurement m2 { humiditySensor.getName(), humiditySensor.getUnit(), humidityValue, currentTimeStamp() };
 
   storage.addMeasurement(m1);
    storage.addMeasurement(m2);

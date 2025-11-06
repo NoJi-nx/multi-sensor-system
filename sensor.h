@@ -18,7 +18,9 @@ class Sensor {
     //metod för simulera sensor
     double read() const;
 
-    //getter metod för hjälp
-    string getName() const;
+    //getter metod för visa värden
+    string getName() const { return name;}
+    string getUnit() const { return unit; }
+
     
 };
