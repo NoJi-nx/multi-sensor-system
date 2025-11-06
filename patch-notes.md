@@ -2,7 +2,45 @@
 
 ## Part C
 
-#### C.3 Call stats in mainn.cpp
+#### C.4 Implement a new filtered function on the header
+
+```cpp
+void MeasurementStorage::printAll(const string& sensorName) const {
+    bool any = false;
+      
+      const int tsW = 20;
+   int sensorW = max<int>(18, static_cast<int>(sensorName.size()));
+    const int valW = 10;
+    const int unitW = 8;
+
+    cout << left
+         << setw(tsW)     << "Timestamp"
+         << setw(sensorW) << "Sensor"
+         << right 
+         << setw(valW)    << "Value"
+         << setw(unitW)   << "Unit"
+         << "\n";
+
+         cout << string(tsW + sensorW + valW + unitW, '-') << "\n";
+         cout << fixed << setprecision(2);
+
+         for (const auto& m : measurements) {
+             if (m.sensorName != sensorName) continue;
+             any = true;
+             cout << left
+            << setw(tsW) << m.timestamp
+            << setw(sensorW) << m.sensorName
+            << setw(valW) << m.value
+            << right
+            << setw(unitW) << m.unit
+            << "\n";
+    }
+    if (!any) {
+        cout << "[No measurements stored for sensor: " << sensorName << "]\n";
+    }
+}
+```
+#### C.3 Call stats in main.cpp
 
 ```cpp
   //skriver ut värden
