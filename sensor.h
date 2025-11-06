@@ -1,4 +1,5 @@
 #include <string>
+#pragma once
 
 using namespace std;
 
@@ -19,4 +20,5 @@ class Sensor {
 
     //getter metod för hjälp
     string getName() const;
+    
 };
