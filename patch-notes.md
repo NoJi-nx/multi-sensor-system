@@ -2,6 +2,17 @@
 
 ## Part C
 
+#### C.3 Call stats in mainn.cpp
+
+```cpp
+  //skriver ut värden
+   storage.printAll();
+
+   cout << "\n";
+   storage.printStats("Temperature 1");
+   cout << "\n";
+   storage.printStats("Humidity 1");
+```
 #### C.2 Implement numerically stable (computeStats)
 
 ```cpp

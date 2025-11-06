@@ -37,7 +37,7 @@ int main()
 
    
 
-   //demo
+   //skriver ut värden
    storage.printAll();
 
    cout << "\n";
