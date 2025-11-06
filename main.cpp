@@ -12,6 +12,8 @@ int main()
     Sensor tempSensor("TempSensor 1", "°C", -10.0, 40.0);
     Sensor humiditySensor("HumiditySensor 1", "%", 0.0, 100.0);
 
+    //Fel sensor
+    //Sensor brokenSensor("FaultySensor", "°C", 50.0, -10.0); //Ta bort för testa
 
     //simulerar & hämtar värden
     double tempValue = tempSensor.read();

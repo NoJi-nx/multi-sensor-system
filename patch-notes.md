@@ -2,7 +2,29 @@
 
 ## Part A
 
-### **A.3 Create & recieve values **
+#### A.4 Range Validation (Optional)
+
+```cpp
+Sensor::Sensor(const string& name, const string& unit, double minValue, double maxValue) 
+{
+    //validering 
+    if (minValue > maxValue) {
+        throw invalid_argument("Error: minValue cannot be greater than maxValue '" + name + "'");
+    }
+    
+    if (minValue == maxValue) {
+        throw invalid_argument("Error: minValue & maxValue cannot be equal '" + name + "'");
+    }
+
+    //lägger till värden efter validering
+    this->name = name;
+    this->unit = unit;
+    this->minValue = minValue;
+    this->maxValue = maxValue;
+}
+```
+
+#### **A.3 Create & recieve values **
 
 ```cpp
 //slumpmässigt genereras värden
