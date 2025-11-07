@@ -146,7 +146,7 @@ void MeasurementStorage::printAll() const
 }
 
 
-//skrive ut endast de mätävrden som tillhör till en specifikt sensor
+//skrive ut endast de mätvärden som tillhör till en specifikt sensor
 void MeasurementStorage::printAll(const string& sensorName) const {
     bool any = false; //kikar om det har hittat något
 
@@ -187,7 +187,7 @@ void MeasurementStorage::printAll(const string& sensorName) const {
     }
 }
 
-//tar bort utrymme från början och slutet av texten ()
+//tar bort utrymme från början och slutet av texten
 static inline string trim(string s){
     auto isspace_ = [](unsigned char c) {return isspace(c); };
 

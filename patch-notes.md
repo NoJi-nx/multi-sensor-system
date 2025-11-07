@@ -1,7 +1,98 @@
 # Patch Notes
 
+
 ## Part D
-## D.1 Add file I/O API for CSV management
+
+#### D.2 Implement CSV functions (save & load) + helpers
+
+
+
+```cpp
+//tar bort utrymme från början och slutet av texten
+static inline string trim(string s){
+    auto isspace_ = [](unsigned char c) {return isspace(c); };
+
+    //tar bort från start
+    s.erase(s.begin(), find_if(s.begin(), s.end(), [&](unsigned char c){return !isspace_(c);}));
+
+    //tar bort från slutet
+    s.erase(find_if(s.rbegin(), s.rend(), [&](unsigned char c){ return !isspace_(c);}).base(), s.end());
+    return s;
+}
+
+//sparar till CSV fil förhandgranskar
+bool MeasurementStorage::saveToCSV(const string& filename) const {
+    ofstream out(filename);
+    if (!out) {
+        cerr << "Error. Could not open file for writing: " << filename << "\n";
+        return false;
+    }
+    //skriver i varje mätvärde i en linje
+    for (const auto& m: measurements) {
+        out << m.timestamp << ", "
+            << m.sensorName << ", "
+            << m.value << ", "
+            << m.unit << "\n";
+    }
+
+    return true;
+
+}
+
+//laddar från en CSV file och lägger de ttill nuvarande lista
+bool MeasurementStorage::loadFromCSV(const string& filename) {
+    ifstream in(filename);
+    if (!in) {
+        cerr << "Error! Could not open fil for reading: " << filename << "\n";
+        return false;
+    }
+
+    string line;
+    size_t added = 0, skipped = 0;
+
+    //läser filen linje från linje
+    while (getline(in, line)) {
+        if (line.empty()) {skipped++; continue;}
+
+        istringstream ss(line);
+        string ts, name, valueStr, unit;
+
+
+        //delar varje linje till 4 delar genom komma tecken
+        if (!getline(ss, ts, ',')) {skipped++; continue;}
+        if (!getline(ss, name, ',')) {skipped++; continue;}
+        if (!getline(ss, valueStr, ',')) {skipped++; continue;}
+        if (!getline(ss, unit)) {skipped++; continue;}
+
+        //rensar extra utrymme
+        ts = trim(ts);
+        name = trim(name);
+        valueStr= trim(valueStr);
+        unit = trim(unit);
+
+        //konvertera värde från text till nummer
+        double v = 0.0;
+        try {
+            v = stod(valueStr);
+        } catch (...) {
+            skipped++;
+            continue; //ignorera nummerisk fält
+
+        }
+
+        //lägger till i listan/lager
+        measurements.push_back(Measurement{name, unit, v, ts});
+        added++;
+    }
+
+    //visar hur många linjer var i process
+    if (skipped > 0) {
+        cerr << "Info Loaded " << added << " rows; skipped" << skipped << " malformed rows.\n";
+    }
+    return true;
+}
+```
+#### D.1 Add file I/O API for CSV management
 
 ```cpp
 //lägger resulterad statisitk  i en struktur  för deklaration - Del C
