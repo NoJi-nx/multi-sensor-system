@@ -9,16 +9,17 @@ using namespace std;
 //hanterar lagring och visar mätvärden
 class MeasurementStorage {
     private:
+    //all matvärden lagras här
     vector<Measurement> measurements; //lagrar alla mätvärden
 
     public: 
-    //lägger till nya mätvärden
+    //lägger till nya mätvärden -- Del B
     void addMeasurement(const Measurement& m);
 
-    //visar alla lagrade mätvärden
+    //skriver ut lagrad mätvärden i en formatterad tabell
     void printAll() const;
 
-    // lägger statisitk resultat  för deklaration - Del C
+    // lägger resultterad statisitk  i en struktur  för deklaration - Del C
     struct Stats{
         size_t count = 0;
         double mean = 0.0;
@@ -29,7 +30,7 @@ class MeasurementStorage {
         bool hasData = false;
     };
 
-    //statistik för en sensor (namn)
+    //statistik för en typ av sensor (skrivs inte ut)
     Stats computeStats(const string& sensorName) const;
 
     //skrivs ut statistik 
@@ -41,20 +42,19 @@ class MeasurementStorage {
     //antal lagrade mätvärden
     size_t size() const noexcept {return measurements.size(); }
 
-    //read-only för hjälpmedel i analy/testt
-    const vector<Measurement>& data() 
-    const { 
-        return measurements; 
-        }
+    //read-only för få tillgång till rådata
+    const vector<Measurement>& data() const { return measurements; }
 
 
-   //file I/O
+   //file I/O (CSV) 
+   //sparar till CSV
    bool saveToCSV(const string& filename) const;
 
    //laddar mätvärden & ignorerar linjer
    bool loadFromCSV(const string& filename);
 
 
+    //bygger raden för bifogning
    void addReading(
        const string& sensorName, const string& unit,
        double value, const string& ts

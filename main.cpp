@@ -1,19 +1,21 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
+#include <cstdlib> // srand & rand
+#include <ctime>     //för RNG, generar slumpmässigt
 #include <unordered_set>
 #include <vector>
 #include <string>
-#include <limits>
+#include <limits> // numerisk begränsing för  input
 #include "sensor.h"
 #include "measurement.h"
 #include "storage.h"
-#include "utils.h"
+#include "utils.h" 
 
 
 using namespace std;
 
-int meanuChoice(int min, int max) {
+//läser menyval med min,max
+//rensar och återhämtar från fel input
+int menuChoice(int min, int max) {
     while (true) {
         cout << "\nChoose (" << min << "-" << max << "): ";
         int choice;
@@ -28,7 +30,7 @@ int meanuChoice(int min, int max) {
     }
 }
 
-//prompt för text
+//prompt för text (filnamn, sensor namn etc.)
 string readLine(const string& prompt){
     cout << prompt;
     string s;
@@ -41,50 +43,69 @@ int main()
       //slumpmässigt genereras värden
     srand(static_cast<unsigned int>(time(nullptr)));
 
-    //skapa två sensor
-    Sensor tempSensor("Temperature 1", "°C", -10.0, 40.0);
-    Sensor humiditySensor("Humidity 1", "%", 0.0, 100.0);
+    //konfigurera sesnorerna -- Del A
+    //definiera sensorerna
+    vector<Sensor> sensors;
+    sensors.emplace_back("Temperature ", "°C", -10.0, 40.0);
+    sensors.emplace_back("Humidity ", "%", 0.0, 100.0);
 
-    //lagring 
+    //central lagring för alla mätvärden -- Del B, C & D
     MeasurementStorage storage;
 
-    //meny loop
+    //meny loop -- Del D
     while (true) {
         cout << "\n------ MENU ------\n"
              << "1. Read new measurements from all sensors\n"
              << "2. Display statistics for a sensor\n"
-             << "3. Display all measurments\n"
+             << "3. Display all measurements\n"
              << "4. Save measurements to CSV\n"
              << "5. Load measurements from CSV\n"
              << "6. Exit\n";
 
-     
+      int choice = menuChoice(1, 6);
 
+      if (choice == 1) {
+          //läser nya mätvärde från varje sensor och läggs till lagring
+          string ts = currentTimeStamp();
+        for (auto& s : sensors) {
+            double val = s.read();
+            storage.addReading(s.getName(), s.getUnit(), val, ts);
+        }
+         cout << "OK Read " << sensors.size() << " new measurement(s) at " << ts << ".\n";
+      }
+      else if (choice == 2) {
+          //visar statistik för en utvald sensor med exakt namn
+          cout << "Availabble sensors:\n";
+          for (const auto& s : sensors) cout << " - " << s.getName() << "\n";
+
+          string name = readLine("Enter the exact sensor name: ");
+          storage.printStats(name);
+
+      }
+      else  if (choice == 3) {
+          //skriver ut  mätvärde i en tabell
+          storage.printAll();
+      }
+      else if (choice == 4) {
+          //sparar nuvarande mätvärde till CSV
+          string fname = readLine("Filename to save (measurements.csv): ");
+          if (fname.empty()) { cout << "Canceled!\n"; continue; }
+          if (storage.saveToCSV(fname)) cout << "Saved. " << storage.size() << " rows to " << fname << "\n";
+      }
+      else if (choice == 5) {
+          //laddar  mätvärde från CSV
+          string fname = readLine("Filename to load (measurements.csv): ");
+          if (fname.empty()) { cout << "Canceled!\n"; continue; }
+          storage.loadFromCSV(fname); // skriver ut meddelandet
+
+      }
+
+      else if (choice == 6) {
+          cout << "Goodbye!\n";
+          break;
+      }
     }
 
-    //Fel sensor
-    //Sensor brokenSensor("FaultySensor", "°C", 50.0, -10.0); //Ta bort för testa
-
-//simulerar & hämtar värden
-    double tempValue = tempSensor.read();
-    double humidityValue = humiditySensor.read();
-
-    //skapar matvärde för lagring
-    Measurement m1 { tempSensor.getName(), tempSensor.getUnit(), tempValue, currentTimeStamp() };
-    Measurement m2 { humiditySensor.getName(), humiditySensor.getUnit(), humidityValue, currentTimeStamp() };
-
-  storage.addMeasurement(m1);
-   storage.addMeasurement(m2);
-
-   
-
-   //skriver ut värden
-   storage.printAll();
-
-   cout << "\n";
-   storage.printStats("Temperature 1");
-   cout << "\n";
-   storage.printStats("Humidity 1");
 
     /*//visar värden
     cout << tempSensor.getName() <<":°C" << tempValue << " °C" << endl;

@@ -1,9 +1,10 @@
 #include <string>
+#include <iostream>
 #pragma once
 
 using namespace std;
 
-//deklarera data 
+//deklarera  sesnor data 
 class Sensor {
     private:
     string name;
@@ -18,7 +19,7 @@ class Sensor {
     //metod för simulera sensor
     double read() const;
 
-    //getter metod för visa värden
+    //getter metod för visa/skriva ut  värden
     string getName() const { return name;}
     string getUnit() const { return unit; }
 

@@ -47,9 +47,9 @@ void MeasurementStorage::printAll(const string& sensorName) const {
    storage.printAll();
 
    cout << "\n";
-   storage.printStats("Temperature 1");
+   storage.printStats("Temperature");
    cout << "\n";
-   storage.printStats("Humidity 1");
+   storage.printStats("Humidity");
 ```
 #### C.2 Implement numerically stable (computeStats)
 

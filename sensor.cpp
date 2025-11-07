@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <iostream>
+#include <iostream>
 #include "sensor.h"
 
 using namespace std;

@@ -3,7 +3,7 @@
 
 using namespace std;
 
-//matvärden tagen från en sensor. Lagrar data från klassen
+//mätvärden tagen från en sensor. Lagrar data från klassen
 struct Measurement {
     string sensorName;
     string unit;
