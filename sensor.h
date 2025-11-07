@@ -14,14 +14,14 @@ class Sensor {
 
     public:
     //konstruktor
+    //skapar en sensor och visar namn, enhet och range
     Sensor(const string& name, const string& unit, double minValue, double maxValue);
 
-    //metod för simulera sensor
+    //metod för simulera sensor och ta mätvärden från sensor inom range
     double read() const;
 
-    //getter metod för visa/skriva ut  värden
-    string getName() const { return name;}
-    string getUnit() const { return unit; }
-
+    //getter metoden 
+    string getName() const { return name;} //visar sensorens namn
+    string getUnit() const { return unit; } //visar sensorens enhet
     
 };

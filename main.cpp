@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include <vector>
 #include <string>
-#include <limits> // numerisk begränsing för  input
+#include <limits> // numerisk begränsning för  input
 #include "sensor.h"
 #include "measurement.h"
 #include "storage.h"
@@ -46,8 +46,8 @@ int main()
     //konfigurera sesnorerna -- Del A
     //definiera sensorerna
     vector<Sensor> sensors;
-    sensors.emplace_back("Temperature ", "°C", -10.0, 40.0);
-    sensors.emplace_back("Humidity ", "%", 0.0, 100.0);
+    sensors.emplace_back("Temperature", "°C", -10.0, 40.0);
+    sensors.emplace_back("Humidity", "%", 0.0, 100.0);
 
     //central lagring för alla mätvärden -- Del B, C & D
     MeasurementStorage storage;
@@ -75,7 +75,7 @@ int main()
       }
       else if (choice == 2) {
           //visar statistik för en utvald sensor med exakt namn
-          cout << "Availabble sensors:\n";
+          cout << "Available sensors:\n";
           for (const auto& s : sensors) cout << " - " << s.getName() << "\n";
 
           string name = readLine("Enter the exact sensor name: ");
@@ -93,7 +93,7 @@ int main()
           if (storage.saveToCSV(fname)) cout << "Saved. " << storage.size() << " rows to " << fname << "\n";
       }
       else if (choice == 5) {
-          //laddar  mätvärde från CSV
+          //laddar mätvärde från CSV till listan/lager
           string fname = readLine("Filename to load (measurements.csv): ");
           if (fname.empty()) { cout << "Canceled!\n"; continue; }
           storage.loadFromCSV(fname); // skriver ut meddelandet
@@ -107,9 +107,7 @@ int main()
     }
 
 
-    /*//visar värden
-    cout << tempSensor.getName() <<":°C" << tempValue << " °C" << endl;
-    cout << humiditySensor.getName() << ": " << humidityValue << " %\n" << endl;*/
+    
 
     return 0;
 }

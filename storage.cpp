@@ -21,7 +21,7 @@ void MeasurementStorage::addMeasurement(const Measurement& m)
 //beräknar statistik (medelmvärde, min, max etc) för en specific sensor
 MeasurementStorage::Stats
 MeasurementStorage::computeStats(const string& sensorName) const {
-    Stats s; // samalr resultaten på statistiken
+    Stats s; // samlar resultaten på statistiken
 
 
     //filtrerar värden 
@@ -29,8 +29,8 @@ MeasurementStorage::computeStats(const string& sensorName) const {
     double maxv = -numeric_limits<double>::infinity();
 
     //Welford's online algoritm för  medel/varians (https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm)
-    //variable för Welfor för beräkna medelvärde & standardavvvikelse
-    size_t n = 0;     // anral readings
+    //variabel för Welford till beräkna medelvärde & standardavvvikelse
+    size_t n = 0;     // antal readings
     double mean = 0.0; // medelvärdet
     double M2 = 0.0;   // summan av kvadratsskillnad
 

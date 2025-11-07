@@ -8,12 +8,12 @@
 
 using namespace std;
 
-//genererar och hämtar nuvvarande tidsstämpel
+//genererar och hämtar nuvarande tidsstämpel
 string currentTimeStamp() {
     using namespace chrono;
     auto now = system_clock::now(); //Nuvarande tidsspunkt
     time_t t = system_clock::to_time_t(now); // Konverttera till time_t 
-    tm tm{};     // Tidsstruktur
+    tm tm{};   //Tidsstruktur
 #if defined(_WIN32) 
 localtime_s(&tm, &t);
 #else 
