@@ -3,6 +3,37 @@
 
 ## Part D
 
+
+
+#### D.4 Add a menu UI
+
+```cpp
+//läser menyval med min,max
+//rensar och återhämtar från fel input
+int menuChoice(int min, int max) {
+    while (true) {
+        cout << "\nChoose (" << min << "-" << max << "): ";
+        int choice;
+        if (cin >> choice && choice >= min && choice <= max) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return choice;
+        }
+
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Invalid input!. Please enter a number between " << min << " and " << max << ".\n";
+    }
+}
+
+//prompt för text (filnamn, sensor namn etc.)
+string readLine(const string& prompt){
+    cout << prompt;
+    string s;
+    getline(cin, s);
+    return s;
+}
+
+```
 #### D.2 Implement CSV functions (save & load) + helpers
 
 
