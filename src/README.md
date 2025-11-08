@@ -30,6 +30,6 @@ The file and class should have the same name, MeasurementStorage.h/cpp
     Comments that I added:
     main.cpp    LINE 26 |  74  |  75  |  77  |  80  |  82
     sensor.h    LINE 14
-    storage.cpp LINE 23 |  37  |  122 |
+    storage.cpp LINE 23 |  37  |  128 |
 
     //DOMINIK CODE REVIEW END//
