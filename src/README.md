@@ -26,10 +26,12 @@ exactly the name and risking misspellings.
 
 The file and class should have the same name, MeasurementStorage.h/cpp
 
+I think the main function should be as minimal as possible, I would suggest dividing everything up in functions(with easy to understand function names) and then let the main function just consist of function calls.
+
 
     Comments that I added:
     main.cpp    LINE 26 |  74  |  75  |  77  |  80  |  82
     sensor.h    LINE 14
-    storage.cpp LINE 23 |  37  |  128 |
+    storage.cpp LINE 23 |  37  |  128 |  156 |
 
     //DOMINIK CODE REVIEW END//

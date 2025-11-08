@@ -153,7 +153,7 @@ void MeasurementStorage::printAll() const
 // skrive ut endast de mätvärden som tillhör till en specifikt sensor
 void MeasurementStorage::printAll(const string &sensorName) const
 {
-    bool any = false; // kikar om det har hittat något
+    bool any = false; // kikar om det har hittat något //DOMINIK->(maybe name it found?)
 
     // skriver ut titeln
     const int tsW = 20;
