@@ -1,0 +1,25 @@
+build inl-uppg1.d/measurement.o: cxx_compile /home/dominik/repos/neji-review/multi-sensor-system/src/measurement.cpp | /home/dominik/repos/neji-review/multi-sensor-system/src/measurement.h
+  out_dir = inl-uppg1.d
+  extra_flags = 
+
+build inl-uppg1.d/sensor.o: cxx_compile /home/dominik/repos/neji-review/multi-sensor-system/src/sensor.cpp | /home/dominik/repos/neji-review/multi-sensor-system/src/sensor.h
+  out_dir = inl-uppg1.d
+  extra_flags = 
+
+build inl-uppg1.d/main.o: cxx_compile /home/dominik/repos/neji-review/multi-sensor-system/src/main.cpp | /home/dominik/repos/neji-review/multi-sensor-system/src/measurement.h /home/dominik/repos/neji-review/multi-sensor-system/src/sensor.h /home/dominik/repos/neji-review/multi-sensor-system/src/storage.h /home/dominik/repos/neji-review/multi-sensor-system/src/utils.h
+  out_dir = inl-uppg1.d
+  extra_flags = 
+
+build inl-uppg1.d/utils.o: cxx_compile /home/dominik/repos/neji-review/multi-sensor-system/src/utils.cpp | /home/dominik/repos/neji-review/multi-sensor-system/src/utils.h
+  out_dir = inl-uppg1.d
+  extra_flags = 
+
+build inl-uppg1.d/storage.o: cxx_compile /home/dominik/repos/neji-review/multi-sensor-system/src/storage.cpp | /home/dominik/repos/neji-review/multi-sensor-system/src/measurement.h /home/dominik/repos/neji-review/multi-sensor-system/src/storage.h
+  out_dir = inl-uppg1.d
+  extra_flags = 
+
+build inl-uppg1: cxx_link inl-uppg1.d/main.o inl-uppg1.d/measurement.o inl-uppg1.d/sensor.o inl-uppg1.d/storage.o inl-uppg1.d/utils.o
+  out_dir = .
+
+build all: phony inl-uppg1
+
