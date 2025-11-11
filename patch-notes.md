@@ -2,7 +2,6 @@
 
 
 ## Part D
-
 #### D.4 Build menu + sensors list + loop
 
 ```cpp
