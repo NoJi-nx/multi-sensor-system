@@ -1,0 +1,12 @@
+rule cxx_compile
+  command = $CXX $DEFINES $INCLUDES $CXXFLAGS $extra_flags -c $in -o $out
+  description = CXX $out
+
+rule cxx_link
+  command = $CXX $in $LDFLAGS $LIBS -o $out
+  description = LINK $out
+
+rule ar_archive
+  command = ar rcs $out $in
+  description = AR $out
+

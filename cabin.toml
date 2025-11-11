@@ -1,0 +1,5 @@
+[package]
+name = "inl-uppg1"
+version = "0.1.0"
+authors = ["Dominik Kalinski <dominik.kalinski@hotmail.com>"]
+edition = "20"

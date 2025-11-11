@@ -1,0 +1,32 @@
+[
+  {
+    "directory": "/home/dominik/repos/neji-review/multi-sensor-system/cabin-out/dev",
+    "command": "c++ -DDEBUG -DCABIN_INL_UPPG1_COMMIT_HASH='\"6fdec0e12802434647141da37655d631456e9857\"' -DCABIN_INL_UPPG1_PROFILE='\"dev\"' -DCABIN_INL_UPPG1_PKG_VERSION_PRE='\"\"' -DCABIN_INL_UPPG1_PKG_VERSION_NUM=65536 -DCABIN_INL_UPPG1_PKG_VERSION_PATCH=0 -DCABIN_INL_UPPG1_COMMIT_DATE='\"2025-11-07\"' -DCABIN_INL_UPPG1_PKG_VERSION_MINOR=1 -DCABIN_INL_UPPG1_COMMIT_SHORT_HASH='\"6fdec0e1\"' -DCABIN_INL_UPPG1_PKG_VERSION_MAJOR=0 -DCABIN_INL_UPPG1_PKG_VERSION='\"0.1.0\"' -DCABIN_INL_UPPG1_PKG_NAME='\"inl-uppg1\"' -I/home/dominik/repos/neji-review/multi-sensor-system/src -std=c++20 -fdiagnostics-color -g -O0  -c /home/dominik/repos/neji-review/multi-sensor-system/src/measurement.cpp -o inl-uppg1.d/measurement.o",
+    "file": "/home/dominik/repos/neji-review/multi-sensor-system/src/measurement.cpp",
+    "output": "inl-uppg1.d/measurement.o"
+  },
+  {
+    "directory": "/home/dominik/repos/neji-review/multi-sensor-system/cabin-out/dev",
+    "command": "c++ -DDEBUG -DCABIN_INL_UPPG1_COMMIT_HASH='\"6fdec0e12802434647141da37655d631456e9857\"' -DCABIN_INL_UPPG1_PROFILE='\"dev\"' -DCABIN_INL_UPPG1_PKG_VERSION_PRE='\"\"' -DCABIN_INL_UPPG1_PKG_VERSION_NUM=65536 -DCABIN_INL_UPPG1_PKG_VERSION_PATCH=0 -DCABIN_INL_UPPG1_COMMIT_DATE='\"2025-11-07\"' -DCABIN_INL_UPPG1_PKG_VERSION_MINOR=1 -DCABIN_INL_UPPG1_COMMIT_SHORT_HASH='\"6fdec0e1\"' -DCABIN_INL_UPPG1_PKG_VERSION_MAJOR=0 -DCABIN_INL_UPPG1_PKG_VERSION='\"0.1.0\"' -DCABIN_INL_UPPG1_PKG_NAME='\"inl-uppg1\"' -I/home/dominik/repos/neji-review/multi-sensor-system/src -std=c++20 -fdiagnostics-color -g -O0  -c /home/dominik/repos/neji-review/multi-sensor-system/src/sensor.cpp -o inl-uppg1.d/sensor.o",
+    "file": "/home/dominik/repos/neji-review/multi-sensor-system/src/sensor.cpp",
+    "output": "inl-uppg1.d/sensor.o"
+  },
+  {
+    "directory": "/home/dominik/repos/neji-review/multi-sensor-system/cabin-out/dev",
+    "command": "c++ -DDEBUG -DCABIN_INL_UPPG1_COMMIT_HASH='\"6fdec0e12802434647141da37655d631456e9857\"' -DCABIN_INL_UPPG1_PROFILE='\"dev\"' -DCABIN_INL_UPPG1_PKG_VERSION_PRE='\"\"' -DCABIN_INL_UPPG1_PKG_VERSION_NUM=65536 -DCABIN_INL_UPPG1_PKG_VERSION_PATCH=0 -DCABIN_INL_UPPG1_COMMIT_DATE='\"2025-11-07\"' -DCABIN_INL_UPPG1_PKG_VERSION_MINOR=1 -DCABIN_INL_UPPG1_COMMIT_SHORT_HASH='\"6fdec0e1\"' -DCABIN_INL_UPPG1_PKG_VERSION_MAJOR=0 -DCABIN_INL_UPPG1_PKG_VERSION='\"0.1.0\"' -DCABIN_INL_UPPG1_PKG_NAME='\"inl-uppg1\"' -I/home/dominik/repos/neji-review/multi-sensor-system/src -std=c++20 -fdiagnostics-color -g -O0  -c /home/dominik/repos/neji-review/multi-sensor-system/src/main.cpp -o inl-uppg1.d/main.o",
+    "file": "/home/dominik/repos/neji-review/multi-sensor-system/src/main.cpp",
+    "output": "inl-uppg1.d/main.o"
+  },
+  {
+    "directory": "/home/dominik/repos/neji-review/multi-sensor-system/cabin-out/dev",
+    "command": "c++ -DDEBUG -DCABIN_INL_UPPG1_COMMIT_HASH='\"6fdec0e12802434647141da37655d631456e9857\"' -DCABIN_INL_UPPG1_PROFILE='\"dev\"' -DCABIN_INL_UPPG1_PKG_VERSION_PRE='\"\"' -DCABIN_INL_UPPG1_PKG_VERSION_NUM=65536 -DCABIN_INL_UPPG1_PKG_VERSION_PATCH=0 -DCABIN_INL_UPPG1_COMMIT_DATE='\"2025-11-07\"' -DCABIN_INL_UPPG1_PKG_VERSION_MINOR=1 -DCABIN_INL_UPPG1_COMMIT_SHORT_HASH='\"6fdec0e1\"' -DCABIN_INL_UPPG1_PKG_VERSION_MAJOR=0 -DCABIN_INL_UPPG1_PKG_VERSION='\"0.1.0\"' -DCABIN_INL_UPPG1_PKG_NAME='\"inl-uppg1\"' -I/home/dominik/repos/neji-review/multi-sensor-system/src -std=c++20 -fdiagnostics-color -g -O0  -c /home/dominik/repos/neji-review/multi-sensor-system/src/utils.cpp -o inl-uppg1.d/utils.o",
+    "file": "/home/dominik/repos/neji-review/multi-sensor-system/src/utils.cpp",
+    "output": "inl-uppg1.d/utils.o"
+  },
+  {
+    "directory": "/home/dominik/repos/neji-review/multi-sensor-system/cabin-out/dev",
+    "command": "c++ -DDEBUG -DCABIN_INL_UPPG1_COMMIT_HASH='\"6fdec0e12802434647141da37655d631456e9857\"' -DCABIN_INL_UPPG1_PROFILE='\"dev\"' -DCABIN_INL_UPPG1_PKG_VERSION_PRE='\"\"' -DCABIN_INL_UPPG1_PKG_VERSION_NUM=65536 -DCABIN_INL_UPPG1_PKG_VERSION_PATCH=0 -DCABIN_INL_UPPG1_COMMIT_DATE='\"2025-11-07\"' -DCABIN_INL_UPPG1_PKG_VERSION_MINOR=1 -DCABIN_INL_UPPG1_COMMIT_SHORT_HASH='\"6fdec0e1\"' -DCABIN_INL_UPPG1_PKG_VERSION_MAJOR=0 -DCABIN_INL_UPPG1_PKG_VERSION='\"0.1.0\"' -DCABIN_INL_UPPG1_PKG_NAME='\"inl-uppg1\"' -I/home/dominik/repos/neji-review/multi-sensor-system/src -std=c++20 -fdiagnostics-color -g -O0  -c /home/dominik/repos/neji-review/multi-sensor-system/src/storage.cpp -o inl-uppg1.d/storage.o",
+    "file": "/home/dominik/repos/neji-review/multi-sensor-system/src/storage.cpp",
+    "output": "inl-uppg1.d/storage.o"
+  }
+]
