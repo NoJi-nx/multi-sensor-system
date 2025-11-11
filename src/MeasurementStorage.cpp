@@ -1,5 +1,5 @@
 #include <iostream>
-#include "storage.h"
+#include "MeasurementStorage.h"
 #include <iomanip>
 #include <limits>
 #include <cmath>
@@ -11,17 +11,34 @@
 
 using namespace std;
 
+
+//
+namespace {
+    // tar bort utrymme från början och slutet av texten
+    inline string trim(string s) {
+        auto isspace_ = [](unsigned char c){return isspace(c); };
+        //från start
+        s.erase(s.begin(), find_if(s.begin(), s.end(),
+                [&](unsigned char c){return !isspace_(c); }));
+        //från slut
+        s.erase(find_if(s.rbegin(), s.rend(),
+                [&](unsigned char c){return !isspace_(c); }).base(),
+                s.end());   
+          return s;           
+    }
+}
+
 // lägger en ny mätävrde object till listan
-void MeasurementStorage::addMeasurement(const Measurement &m)
+void MeasurementStorage::addMeasurement(const Measurement& m)
 {
-    measurements.push_back(m); // samlar värden
+    _measurements.push_back(m); // samlar värden
 }
 
 // beräknar statistik (medelmvärde, min, max etc) för en specific sensor
 MeasurementStorage::Stats
 MeasurementStorage::computeStats(const string &sensorName) const
 {
-    Stats s; // samlar resultaten på statistiken //DOMINIK->(type Stats stats for clarity)
+    Stats stats; // samlar resultaten på statistiken //DOMINIK->(type Stats stats for clarity)
 
     // filtrerar värden
     double minv = numeric_limits<double>::infinity();
@@ -34,64 +51,64 @@ MeasurementStorage::computeStats(const string &sensorName) const
     double M2 = 0.0;   // summan av kvadratsskillnad
 
     // hanterar varje lagrad mätvärde
-    for (const auto &m : measurements)
+    for (const auto& measurement : _measurements)
     { // DOMINIK->(I would type measurement : measurements for better clarity)
-        if (m.sensorName != sensorName)
+        if (measurement.sensorName != sensorName)
             continue;
 
         // sparar enheten på sensor
-        if (!s.hasData)
+        if (!stats.hasData)
         {
-            s.unit = m.unit; // antal enhet per sensor
-            s.hasData = true;
+            stats.unit = measurement.unit; // antal enhet per sensor
+            stats.hasData = true;
         }
 
         // uppdaterar min/max
-        if (m.value < minv)
-            minv = m.value;
-        if (m.value > maxv)
-            maxv = m.value;
+        if (measurement.value < minv)
+            minv = measurement.value;
+        if (measurement.value > maxv)
+            maxv = measurement.value;
 
         // uppdaterar Welford algoritm för emdelvärde och standardavvikelse
         ++n;
-        double delta = m.value - mean;
+        double delta = measurement.value - mean;
         mean += delta / static_cast<double>(n);
-        double delta2 = m.value - mean;
+        double delta2 = measurement.value - mean;
         M2 += delta * delta2;
     }
     // om ingen mätvärde hittats
-    if (!s.hasData)
+    if (!stats.hasData)
     {
-        return s; // hämtar tom resultat
+        return stats; // hämtar tom resultat
     }
 
     // sparar räkningen statistik
-    s.count = n;
-    s.mean = mean;
-    s.min = minv;
-    s.max = maxv;
+    stats.count = n;
+    stats.mean = mean;
+    stats.min = minv;
+    stats.max = maxv;
 
     // beräknar standardavvikelse
     if (n >= 2)
     {
         double variance_sample = M2 / static_cast<double>(n - 1); // varians (n-1)
-        s.stddev = sqrt(variance_sample);
+        stats.stddev = sqrt(variance_sample);
     }
     else
     {
-        s.stddev = 0.0; // om det finns inte tillräckligt värde för standardavvikelse
+        stats.stddev = 0.0; // om det finns inte tillräckligt värde för standardavvikelse
     }
 
-    return s;
+    return stats;
 }
 
 // skriver ut räkningar på statistiken för en specifikt av sensor
 void MeasurementStorage::printStats(const string &sensorName) const
 {
-    auto s = computeStats(sensorName); // räknar först
+   Stats stats = computeStats(sensorName); // räknar först
 
     // om ej data finns
-    if (!s.hasData)
+    if (!stats.hasData)
     {
         cout << "No measurements: " << sensorName << "\n";
         return;
@@ -102,17 +119,17 @@ void MeasurementStorage::printStats(const string &sensorName) const
     cout << string(26 + sensorName.size(), '-') << "\n";
 
     cout << fixed << setprecision(2);
-    cout << "Count     : " << s.count << "\n";
-    cout << "Average   : " << s.mean << " " << s.unit << "\n";
-    cout << "Min       : " << s.min << " " << s.unit << "\n";
-    cout << "Max       : " << s.max << " " << s.unit << "\n";
-    cout << "Std Dev   : " << s.stddev << " " << s.unit << "\n";
+    cout << "Count     : " << stats.count << "\n";
+    cout << "Average   : " << stats.mean << " " << stats.unit << "\n";
+    cout << "Min       : " << stats.min << " " << stats.unit << "\n";
+    cout << "Max       : " << stats.max << " " << stats.unit << "\n";
+    cout << "Std Dev   : " << stats.stddev << " " << stats.unit << "\n";
 }
 
 // skriver alla lagrad mätvärde i en tabell format
 void MeasurementStorage::printAll() const
 {
-    if (measurements.empty())
+    if (_measurements.empty())
     {
         cout << "[No measurements stored]\n";
         return;
@@ -138,14 +155,14 @@ void MeasurementStorage::printAll() const
     cout << fixed << setprecision(2);
 
     // visar varje rad inom mätvärdena genom loop
-    for (const auto &m : measurements)
+    for (const auto& measurement : _measurements)
     {
         cout << left
-             << setw(tsW) << m.timestamp
-             << setw(sensorW) << m.sensorName
+             << setw(tsW) << measurement.timestamp
+             << setw(sensorW) << measurement.sensorName
              << right
-             << setw(valW) << m.value
-             << setw(unitW) << m.unit
+             << setw(valW) << measurement.value
+             << setw(unitW) << measurement.unit
              << "\n";
     }
 }
@@ -153,7 +170,7 @@ void MeasurementStorage::printAll() const
 // skrive ut endast de mätvärden som tillhör till en specifikt sensor
 void MeasurementStorage::printAll(const string &sensorName) const
 {
-    bool any = false; // kikar om det har hittat något //DOMINIK->(maybe name it found?)
+    bool found = false; // kikar om det har hittat något //DOMINIK->(maybe name it found?)
 
     // skriver ut titeln
     const int tsW = 20;
@@ -173,43 +190,27 @@ void MeasurementStorage::printAll(const string &sensorName) const
     cout << fixed << setprecision(2);
 
     // skriver ut endast rader som tillhör specifikt sensor
-    for (const auto &m : measurements)
+    for (const auto& measurement : _measurements)
     {
-        if (m.sensorName != sensorName)
+        if (measurement.sensorName != sensorName)
             continue;
-        any = true;
+        found = true;
         cout << left
-             << setw(tsW) << m.timestamp
-             << setw(sensorW) << m.sensorName
+             << setw(tsW) << measurement.timestamp
+             << setw(sensorW) << measurement.sensorName
              << right
-             << setw(valW) << m.value
-             << setw(unitW) << m.unit
+             << setw(valW) << measurement.value
+             << setw(unitW) << measurement.unit
              << "\n";
     }
     // visar meddelandet om ingen data finns
-    if (!any)
+    if (!found)
     {
-        cout << "[No measurements stored for sensor: " << sensorName << "]\n";
+        cout << "No measurements stored for sensor: " << sensorName << "]\n";
     }
 }
 
-// tar bort utrymme från början och slutet av texten
-static inline string trim(string s)
-{
-    auto isspace_ = [](unsigned char c)
-    { return isspace(c); };
 
-    // tar bort från start
-    s.erase(s.begin(), find_if(s.begin(), s.end(), [&](unsigned char c)
-                               { return !isspace_(c); }));
-
-    // tar bort från slutet
-    s.erase(find_if(s.rbegin(), s.rend(), [&](unsigned char c)
-                    { return !isspace_(c); })
-                .base(),
-            s.end());
-    return s;
-}
 
 // sparar till CSV fil förhandgranskar
 bool MeasurementStorage::saveToCSV(const string &filename) const
@@ -221,19 +222,19 @@ bool MeasurementStorage::saveToCSV(const string &filename) const
         return false;
     }
     // skriver i varje mätvärde i en linje
-    for (const auto &m : measurements)
+    for (const auto& measurement : _measurements)
     {
-        out << m.timestamp << ", "
-            << m.sensorName << ", "
-            << m.value << ", "
-            << m.unit << "\n";
+        out << measurement.timestamp << ", "
+            << measurement.sensorName << ", "
+            << measurement.value << ", "
+            << measurement.unit << "\n";
     }
 
     return true;
 }
 
 // laddar från en CSV file och lägger de ttill nuvarande lista
-bool MeasurementStorage::loadFromCSV(const string &filename)
+bool MeasurementStorage::loadToCSV(const string& filename)
 {
     ifstream in(filename);
     if (!in)
@@ -298,7 +299,7 @@ bool MeasurementStorage::loadFromCSV(const string &filename)
         }
 
         // lägger till i listan/lager
-        measurements.push_back(Measurement{name, unit, v, ts});
+        _measurements.push_back(Measurement{name, unit, v, ts});
         added++;
     }
 

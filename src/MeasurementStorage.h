@@ -8,17 +8,7 @@ using namespace std;
 
 //hanterar lagring och visar mätvärden
 class MeasurementStorage {
-    private:
-    //all mätvärden lagras här
-    vector<Measurement> measurements; //lagrar alla mätvärden
-
-    public: 
-    //lägger till nya mätvärden -- Del B
-    void addMeasurement(const Measurement& m);
-
-    //skriver ut lagrad mätvärden i en formatterad tabell
-    void printAll() const;
-
+  public: 
     //lägger resulterad statisitk  i en struktur  för deklaration - Del C
     struct Stats{
         size_t count = 0;
@@ -30,8 +20,29 @@ class MeasurementStorage {
         bool hasData = false;
     };
 
+private:
+    //all mätvärden lagras här
+    vector<Measurement> _measurements; //lagrar alla mätvärden
+
     //statistik för en typ av sensor (skrivs inte ut)
     Stats computeStats(const string& sensorName) const;
+
+  public:
+    //lägger till nya mätvärden -- Del B
+    void addMeasurement(const Measurement& m);
+
+     //bygger rader för bifogning
+   void addReading(
+       const string& sensorName, 
+       const string& unit,
+       double value, 
+       const string& timeStamp) 
+       {
+           _measurements.push_back(Measurement{sensorName, unit, value, timeStamp});
+       }
+
+    //skriver ut lagrad mätvärden i en formatterad tabell
+    void printAll() const;
 
     //skrivs ut statistik 
     void printStats(const string& sensorName) const;
@@ -40,10 +51,10 @@ class MeasurementStorage {
     void printAll(const string& sensorName) const;
 
     //antal lagrade mätvärden
-    size_t size() const noexcept {return measurements.size(); }
+    size_t size() const noexcept {return _measurements.size(); }
 
-    //read-only för få tillgång till rådata
-    const vector<Measurement>& data() const { return measurements; }
+    //read-only för få tillgång till rådata 
+    const vector<Measurement>& data() const { return _measurements; }
 
 
    //file I/O (CSV) 
@@ -51,14 +62,7 @@ class MeasurementStorage {
    bool saveToCSV(const string& filename) const;
 
    //laddar mätvärden & ignorerar linjer
-   bool loadFromCSV(const string& filename);
+   bool loadToCSV(const string& filename);
 
-
-    //bygger rader för bifogning
-   void addReading(
-       const string& sensorName, const string& unit,
-       double value, const string& ts
-       ) {
-           measurements.push_back(Measurement{sensorName, unit, value, ts});
-       }
+   
 };

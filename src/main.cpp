@@ -1,13 +1,11 @@
 #include <iostream>
 #include <cstdlib> // srand & rand
 #include <ctime>   //för RNG, generar slumpmässigt
-#include <unordered_set>
 #include <vector>
 #include <string>
 #include <limits> // numerisk begränsning för  input
 #include "sensor.h"
-#include "measurement.h"
-#include "storage.h"
+#include "MeasurementStorage.h"
 #include "utils.h"
 
 using namespace std;
@@ -26,9 +24,12 @@ int menuChoice(int min, int max)
             return choice;
         }
         // DOMINIK// add an else just for easier code reading
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        cout << "Invalid input!. Please enter a number between " << min << " and " << max << ".\n";
+        else
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input!. Please enter a number between " << min << " and " << max << ".\n";
+        }
     }
 }
 
@@ -41,6 +42,84 @@ string readLine(const string &prompt)
     return s;
 }
 
+//list sensorer och låt användaren använda genom nummer. -- Dominick review
+int chooseSensorByNumber(const vector<Sensor>& sensors) {
+    if (sensors.empty()) {
+        cout << "No sensors available.\n";
+        return -1;
+    }
+
+    cout << "Available sensors:\n";
+    for (size_t i = 0; i < sensors.size(); ++i) {
+        cout << " " << (i + 1) << ") " << sensors[i].getName() << "\n";
+    }
+    cout << " 0) Cancel\n";
+
+    while (true) {
+        cout << "Pick a sensor by number (0-" << sensors.size() << "):" ;
+        int n;
+        if (cin >> n) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            if (n == 0) return -1;
+            if (n >= 1 && static_cast<size_t>(n) <=sensors.size()) {
+                return n - 1;
+            }
+        }else {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        cout << "Invalid choice. Try again.\n";    
+        
+    }
+}
+
+//helpers (förslag av Dominik)
+void readAllSensors(const vector <Sensor>& sensors, MeasurementStorage& storage) {
+    if (sensors.empty()) {
+        cout << "No sensors to read from.\n";
+        return;
+    }
+    string timeStamp = currentTimeStamp();
+    for (const auto& sensor : sensors) {
+        double value = sensor.read();
+        storage.addReading(sensor.getName(), sensor.getUnit(), value, timeStamp);
+    }
+    cout << "OK Read "  << sensors.size() << " new measurement(s) at "  << timeStamp << ".\n";
+}
+
+void showStatsForChosenSensor(const vector<Sensor> & sensors, const MeasurementStorage& storage) {
+    int idx = chooseSensorByNumber(sensors);
+    if (idx < 0) { cout << "Canceled.\n"; return; }
+    const string& name = sensors[idx].getName();
+    storage.printStats(name);
+    storage.printAll(name);
+}
+
+void saveCSV(MeasurementStorage& storage) {
+
+            // sparar nuvarande mätvärde till CSV
+            string fname = readLine("Filename to save (measurements.csv): ");
+            if (fname.empty())
+            {
+                cout << "Canceled!\n";
+                return;
+            }
+            if (storage.saveToCSV(fname))
+                cout << "Saved. " << storage.size() << " rows to " << fname << "\n";
+}
+
+void loadCSV(MeasurementStorage& storage) {
+    // laddar mätvärde från CSV till listan/lager
+            string fname = readLine("Filename to load (measurements.csv): ");
+            if (fname.empty())
+            {
+                cout << "Canceled!\n";
+                return;
+            }
+           if (storage.loadToCSV(fname))
+            cout << "Loaded File: " << fname << "\n"; // skriver ut meddelandet
+}
+
 int main()
 {
     // slumpmässigt genereras värden
@@ -49,8 +128,8 @@ int main()
     // konfigurera sesnorerna -- Del A
     // definiera sensorerna
     vector<Sensor> sensors;
-    sensors.emplace_back("Temperature", "°C", -10.0, 40.0);
-    sensors.emplace_back("Humidity", "%", 0.0, 100.0);
+    sensors.emplace_back(SensorType::Temperature, "Temperature 1", "°C", -10.0, 40.0);
+    sensors.emplace_back(SensorType::Humidity, "Humidity 1", "%", 0.0, 100.0);
 
     // central lagring för alla mätvärden -- Del B, C & D
     MeasurementStorage storage;
@@ -68,63 +147,13 @@ int main()
 
         int choice = menuChoice(1, 6);
 
-        if (choice == 1)
-        {
-            // läser nya mätvärde från varje sensor och läggs till lagring
-            string ts = currentTimeStamp(); // DOMINIK// timeStamp instead of ts (easier to understand)
-            for (auto &s : sensors)         // DOMINIK// check if any sensors exist with sensors.size()
-            {
-                double val = s.read(); // DOMINIK// Just type the whole word value so its easier to read
-                storage.addReading(s.getName(), s.getUnit(), val, ts);
-            }
-            // if(sensors.size() > 0)
-            cout << "OK Read " << sensors.size() << " new measurement(s) at " << ts << ".\n";
-            // else cout << "no sensors to read from" << endl;
-        }
-        else if (choice == 2)
-        {
-            // visar statistik för en utvald sensor med exakt namn
-            cout << "Available sensors:\n";
-            for (const auto &s : sensors)
-                cout << " - " << s.getName() << "\n";
-
-            string name = readLine("Enter the exact sensor name: ");
-            storage.printStats(name);
-        }
-        else if (choice == 3)
-        {
-            // skriver ut  mätvärde i en tabell
-            storage.printAll();
-        }
-        else if (choice == 4)
-        {
-            // sparar nuvarande mätvärde till CSV
-            string fname = readLine("Filename to save (measurements.csv): ");
-            if (fname.empty())
-            {
-                cout << "Canceled!\n";
-                continue;
-            }
-            if (storage.saveToCSV(fname))
-                cout << "Saved. " << storage.size() << " rows to " << fname << "\n";
-        }
-        else if (choice == 5)
-        {
-            // laddar mätvärde från CSV till listan/lager
-            string fname = readLine("Filename to load (measurements.csv): ");
-            if (fname.empty())
-            {
-                cout << "Canceled!\n";
-                continue;
-            }
-            storage.loadFromCSV(fname); // skriver ut meddelandet
-        }
-
-        else if (choice == 6)
-        {
-            cout << "Goodbye!\n";
-            break;
-        }
+        if (choice == 1) readAllSensors(sensors, storage);
+        else if (choice == 2) showStatsForChosenSensor(sensors, storage);
+        else if (choice == 3) storage.printAll();
+        else if (choice == 4) saveCSV(storage);
+        else if (choice == 5) loadCSV(storage);
+        else if (choice == 6) { cout << "Goodbye!\n"; break; }
+       
     }
 
     return 0;
