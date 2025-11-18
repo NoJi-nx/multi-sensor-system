@@ -61,6 +61,13 @@ MeasurementStorage::computeStats(const string &sensorName) const
         {
             stats.unit = measurement.unit; // antal enhet per sensor
             stats.hasData = true;
+            stats.firstTimestamp = measurement.timestamp;
+            stats.lastTimestamp = measurement.timestamp;
+        } else {
+            if (measurement.timestamp < stats.firstTimestamp)
+                stats.firstTimestamp = measurement.timestamp;
+            if (measurement.timestamp > stats.lastTimestamp) 
+                stats.lastTimestamp = measurement.timestamp;
         }
 
         // uppdaterar min/max
@@ -114,6 +121,8 @@ void MeasurementStorage::printStats(const string &sensorName) const
         return;
     }
 
+    cout << "Time span : " << stats.firstTimestamp << "  ->  " << stats.lastTimestamp << "\n";
+
     // skriver resultatet i format
     cout << "Statistics for sensor: " << sensorName << "\n";
     cout << string(26 + sensorName.size(), '-') << "\n";
@@ -131,7 +140,7 @@ void MeasurementStorage::printAll() const
 {
     if (_measurements.empty())
     {
-        cout << "[No measurements stored]\n";
+        cout << "No measurements stored\n";
         return;
     }
 

@@ -79,7 +79,9 @@ void readAllSensors(const vector <Sensor>& sensors, MeasurementStorage& storage)
         cout << "No sensors to read from.\n";
         return;
     }
+    
     string timeStamp = currentTimeStamp();
+
     for (const auto& sensor : sensors) {
         double value = sensor.read();
         storage.addReading(sensor.getName(), sensor.getUnit(), value, timeStamp);
@@ -124,6 +126,9 @@ int main()
 {
     // slumpmässigt genereras värden
     srand(static_cast<unsigned int>(time(nullptr)));
+
+    //testa timestamp
+    cout << "Current time: " << currentTimeStamp <<"\n";
 
     // konfigurera sesnorerna -- Del A
     // definiera sensorerna

@@ -18,6 +18,8 @@ class MeasurementStorage {
         double stddev = 0.0;
         string unit;
         bool hasData = false;
+        string firstTimestamp;
+        string lastTimestamp;
     };
 
 private:
