@@ -7,6 +7,7 @@
 #include "sensor.h"
 #include "MeasurementStorage.h"
 #include "utils.h"
+#include <iomanip>
 
 using namespace std;
 
@@ -79,7 +80,7 @@ void readAllSensors(const vector <Sensor>& sensors, MeasurementStorage& storage)
         cout << "No sensors to read from.\n";
         return;
     }
-    
+
     string timeStamp = currentTimeStamp();
 
     for (const auto& sensor : sensors) {
@@ -90,11 +91,79 @@ void readAllSensors(const vector <Sensor>& sensors, MeasurementStorage& storage)
 }
 
 void showStatsForChosenSensor(const vector<Sensor> & sensors, const MeasurementStorage& storage) {
+    if (sensors.empty()) {
+        cout << "No sensors available.\n";
+        return;
+    }
+
     int idx = chooseSensorByNumber(sensors);
     if (idx < 0) { cout << "Canceled.\n"; return; }
+    const Sensor& sensor = sensors[idx];
     const string& name = sensors[idx].getName();
+
+    //vanlig statistik
     storage.printStats(name);
     storage.printAll(name);
+
+    //tröskelanalys 
+    if (!sensor.hasThreshold()){
+        cout << "\n No threshold set for this sensor. Use option 6 to set one. \n";
+        return;
+    }
+
+    double threshold = sensor.getThreshold();
+    size_t above = 0;
+    size_t belowOrEqual = 0;
+
+    //loopa över alla mätvärden och beräkna
+    const auto& all = storage.data();
+    for (const auto& m : all) {
+        if (m.sensorName != name)
+        continue;
+
+        if (m.value > threshold)
+        above++;
+        else 
+        belowOrEqual++;
+    }
+
+    cout << "\nThreshold analysis for '" << name << "'\n";
+    cout << "-----------------------------------\n";
+    cout << "Threshold: " << threshold << " " << sensor.getUnit() << "\n";
+    cout << "Above threshold    : " << above << "\n";
+    cout << "Below or equal value : " << belowOrEqual << "\n";
+
+    //markera varje rad som ligger över tröskel
+
+    cout << "\nMeasurements with threshold marker:\n";
+    cout << "( '!' means value is above threshold )\n\n";
+
+    cout << left << setw(20) << "Timestamp"
+         << setw(18) << "Sensor"
+         << right << setw(10) << "Value"
+         << setw(8) << "Unit"
+         << "  "
+         << "Flag"
+         << "\n";
+
+    cout << string(20+18+10+8+6, '-') << "\n";
+
+    cout << fixed << setprecision(2);
+
+    for (const auto& m : all) {
+        if (m.sensorName != name)
+        continue;
+
+        bool isAbove = (m.value > threshold);
+        
+    cout << left << setw(20) << m.timestamp
+         << setw(18) << m.sensorName
+         << right << setw(10) << m.value
+         << setw(8) << m.unit
+         << "  "
+         << (isAbove ? "!" : "")
+         << "\n";
+    }   
 }
 
 void saveCSV(MeasurementStorage& storage) {
@@ -120,6 +189,36 @@ void loadCSV(MeasurementStorage& storage) {
             }
            if (storage.loadToCSV(fname))
             cout << "Loaded File: " << fname << "\n"; // skriver ut meddelandet
+}
+
+//låter använderen välja en sensor och sätte ett tröskelvärde
+void setThresholdForSensor(vector<Sensor>& sensors) {
+    if (sensors.empty()) {
+        cout << "No sensors available.\n";
+        return;
+    }
+
+    int idx = chooseSensorByNumber(sensors);
+    if ( idx < 0) {
+        cout << "Canceled.\n";
+        return;
+    }
+
+    cout << "Enter threshold value for sensor '"
+         << sensors[idx].getName() << "': ";
+
+    double threshold;
+    while (!(cin >> threshold)) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Invalid number. Try again: ";
+
+    } cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    sensors[idx].setThreshold(threshold);
+    cout << "Threshold set to " << threshold
+         << " " << sensors[idx].getUnit()
+         << " for sensor '" << sensors[idx].getName() << "'.\n";
 }
 
 int main()
@@ -148,16 +247,18 @@ int main()
              << "3. Display all measurements\n"
              << "4. Save measurements to CSV\n"
              << "5. Load measurements from CSV\n"
-             << "6. Exit\n";
+             << "6. Set threshold for a sesnor\n"
+             << "7. Exit\n";
 
-        int choice = menuChoice(1, 6);
+        int choice = menuChoice(1, 7);
 
         if (choice == 1) readAllSensors(sensors, storage);
         else if (choice == 2) showStatsForChosenSensor(sensors, storage);
         else if (choice == 3) storage.printAll();
         else if (choice == 4) saveCSV(storage);
         else if (choice == 5) loadCSV(storage);
-        else if (choice == 6) { cout << "Goodbye!\n"; break; }
+        else if (choice == 6) { setThresholdForSensor(sensors); }
+        else if (choice == 7) { cout << "Goodbye!\n"; break; }
        
     }
 
