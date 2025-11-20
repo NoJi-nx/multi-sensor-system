@@ -8,6 +8,8 @@
 #include "MeasurementStorage.h"
 #include "utils.h"
 #include <iomanip>
+#include <thread> //this_thread::sleep_for
+#include <chrono> //chrono::seconds
 
 using namespace std;
 
@@ -88,6 +90,8 @@ void readAllSensors(const vector <Sensor>& sensors, MeasurementStorage& storage)
         storage.addReading(sensor.getName(), sensor.getUnit(), value, timeStamp);
     }
     cout << "OK! Read "  << sensors.size() << " new measurement(s) at "  << timeStamp << ".\n";
+
+    
 }
 
 void showStatsForChosenSensor(const vector<Sensor> & sensors, const MeasurementStorage& storage) {
@@ -257,6 +261,53 @@ void searchMeasurements(const vector<Sensor>& sensors, const MeasurementStorage&
 
 }
 
+//automatist mätläge som läser alla sensorer var sekund & totalt gånger
+void autoMeasureInterval(const vector<Sensor>& sensors, MeasurementStorage& storage)
+{
+    if (sensors.empty()) {
+        cout << "No sensors configured\n";
+    }
+
+    //hur ofta
+    cout << "Enter interval in seconds between measurements: ";
+    int seconds;
+    while (!(cin >> seconds) || seconds <=0) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Please enter a positive number for seconds: ";
+    }
+
+    //antal gånger
+    cout << "How many measurements do you want to collect? ";
+    int count;
+       while (!(cin >> count) || count <=0) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Please enter a positive number for count: ";
+
+}
+
+cin.ignore(numeric_limits<streamsize>::max(), '\n'); //rensar radslut
+
+cout << "\nStarting automatic mode:"
+     << count << " measurement cycles, every "
+     << seconds << "second(s).\n";
+
+     for (int i =1; i <=count; i++){
+         cout << "\n--- Cycle " << i <<" / " << count << "---\n";
+         //använder helpern
+         readAllSensors(sensors, storage);
+
+         if (i < count) {
+             cout << "Waiting " << seconds << " second(s)...\n";
+             this_thread::sleep_for(chrono::seconds(seconds));
+         }
+     }
+
+     cout << "\nAutomatic measurement finished.\n";
+
+}
+
 int main()
 {
     // slumpmässigt genereras värden
@@ -283,20 +334,22 @@ int main()
              << "3. Display all measurements\n"
              << "4. Save measurements to CSV\n"
              << "5. Load measurements from CSV\n"
-             << "6. Set threshold for a sesnor\n"
-             << "7. Search measurements\n"
-             << "8. Exit\n";
+             << "6. Automatic measurement in intervals\n"
+             << "7. Set threshold for a sesnor\n"
+             << "8. Search measurements\n"
+             << "9. Exit\n";
 
-        int choice = menuChoice(1, 8);
+        int choice = menuChoice(1, 9);
 
         if (choice == 1) readAllSensors(sensors, storage);
         else if (choice == 2) showStatsForChosenSensor(sensors, storage);
         else if (choice == 3) storage.printAll();
         else if (choice == 4) saveCSV(storage);
         else if (choice == 5) loadCSV(storage);
-        else if (choice == 6) { setThresholdForSensor(sensors); }
-        else if (choice == 7) { searchMeasurements(sensors, storage); }
-        else if (choice == 8) { cout << "Goodbye!\n"; break; }
+        else if (choice == 6) { autoMeasureInterval(sensors, storage); }
+        else if (choice == 7) { setThresholdForSensor(sensors); }
+        else if (choice == 8) { searchMeasurements(sensors, storage); }
+        else if (choice == 9) { cout << "Goodbye!\n"; break; }
        
     }
 
