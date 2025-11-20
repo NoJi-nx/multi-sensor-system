@@ -147,7 +147,7 @@ void MeasurementStorage::printHistogram(const string& sensorName) const
 
         values.push_back(m.value);
         if (unit.empty()) {
-            unit = m.unit; //enhet minnas för visning
+            unit = m.unit; //minnas enhet för visning
         }
     }
 
@@ -163,7 +163,7 @@ void MeasurementStorage::printHistogram(const string& sensorName) const
         freq[key]++;
     }
 
-    cout << "\nASCII histogram for " << sensorName << "\n";
+    cout << "\nASCII histogram for " << sensorName << " (unit: " << unit << ")\n";
     cout << string(40 + sensorName.size(), '-') << "\n";
 
     cout << fixed << setprecision(1);
@@ -264,6 +264,50 @@ void MeasurementStorage::printAll(const string &sensorName) const
     }
 }
 
+void MeasurementStorage::printSearchResults(const string& sensorName, const string& fromTs, const string& toTs) const 
+{
+    bool any = false;
+
+    //samma kolumn som printAll()
+    const int tsW = 20;
+    int sensorW = max<int>(18, static_cast<int>(sensorName.size()));
+    const int valW = 10;
+    const int unitW = 8;
+
+    cout << left
+         << setw(tsW) << "Timestamp"
+         << setw(sensorW) << "Sensor"
+         << right
+         << setw(valW) << "Value"
+         << setw(unitW) << "Unit"
+         << "\n";
+
+    cout << string(tsW + sensorW + valW + unitW, '-') << "\n";
+    cout << fixed << setprecision(2);
+
+    // skriver ut endast rader som tillhör specifikt sensor
+    for (const auto& m : _measurements)
+    {
+        if (m.sensorName != sensorName)
+            continue;
+
+        any = true;
+
+        cout << left
+             << setw(tsW) << m.timestamp
+             << setw(sensorW) << m.sensorName
+             << right
+             << setw(valW) << m.value
+             << setw(unitW) << m.unit
+             << "\n";
+    }
+    // visar meddelandet om ingen data finns
+    if (!any)
+    {
+        cout << "No measurements match the given filter \n";
+    }
+
+}
 
 
 // sparar till CSV fil förhandgranskar

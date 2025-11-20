@@ -224,6 +224,39 @@ void setThresholdForSensor(vector<Sensor>& sensors) {
          << " for sensor '" << sensors[idx].getName() << "'.\n";
 }
 
+void searchMeasurements(const vector<Sensor>& sensors, const MeasurementStorage& storage) 
+{
+    if (sensors.empty()) {
+        cout << "No sensors available.\n";
+        return;
+    }
+
+    //välj sensorn först
+    int idx = chooseSensorByNumber(sensors);
+    if (idx < 0) {
+        cout << "Canceled.\n";
+        return;
+    }
+
+    const string& sensorName = sensors[idx].getName();
+
+    //efterfrågar användare för tidspunkt
+    cout << "Enter FROM timestamp (YYYY-MM-DD HH:MM:SS) or press Enter for no lower limit:\n";
+    string fromTs;
+    getline(cin, fromTs); //om det finns rester
+    if (fromTs.empty()) {
+        //om det blir tomt
+    }
+
+    cout << "Enter TO timestamp (YYYY-MM-DD HH:MM:SS) or press Enter for no lower limit:\n";
+    string toTs;
+    getline(cin, toTs);
+
+    cout << "\nSearching measurements for '" << sensorName << "'...\n";
+    storage.printSearchResults(sensorName, fromTs, toTs);
+
+}
+
 int main()
 {
     // slumpmässigt genereras värden
@@ -251,9 +284,10 @@ int main()
              << "4. Save measurements to CSV\n"
              << "5. Load measurements from CSV\n"
              << "6. Set threshold for a sesnor\n"
-             << "7. Exit\n";
+             << "7. Search measurements\n"
+             << "8. Exit\n";
 
-        int choice = menuChoice(1, 7);
+        int choice = menuChoice(1, 8);
 
         if (choice == 1) readAllSensors(sensors, storage);
         else if (choice == 2) showStatsForChosenSensor(sensors, storage);
@@ -261,7 +295,8 @@ int main()
         else if (choice == 4) saveCSV(storage);
         else if (choice == 5) loadCSV(storage);
         else if (choice == 6) { setThresholdForSensor(sensors); }
-        else if (choice == 7) { cout << "Goodbye!\n"; break; }
+        else if (choice == 7) { searchMeasurements(sensors, storage); }
+        else if (choice == 8) { cout << "Goodbye!\n"; break; }
        
     }
 

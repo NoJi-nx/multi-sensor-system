@@ -55,6 +55,9 @@ private:
     //skriver ut  en ASCII histogram av värden för en sensor
     void printHistogram(const string& sensorName) const;
 
+    //skriver ut mätvärrden som är filterad av sensors namn
+    void printSearchResults ( const string& sensorName, const string& fromTs, const string& toTs) const;
+    
     //antal lagrade mätvärden
     size_t size() const noexcept {return _measurements.size(); }
 
