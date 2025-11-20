@@ -8,6 +8,7 @@
 #include <sstream>
 #include <fstream>
 #include <cctype> //kika områden när man trimmar text
+#include <map>
 
 using namespace std;
 
@@ -133,6 +134,50 @@ void MeasurementStorage::printStats(const string &sensorName) const
     cout << "Min       : " << stats.min << " " << stats.unit << "\n";
     cout << "Max       : " << stats.max << " " << stats.unit << "\n";
     cout << "Std Dev   : " << stats.stddev << " " << stats.unit << "\n";
+}
+
+void MeasurementStorage::printHistogram(const string& sensorName) const
+{
+    vector<double> values;
+    string unit;
+
+    for (const auto& m : _measurements) {
+        if (m.sensorName != sensorName)
+        continue;
+
+        values.push_back(m.value);
+        if (unit.empty()) {
+            unit = m.unit; //enhet minnas för visning
+        }
+    }
+
+    if (values.empty()) {
+        cout << "No measurements for sensor: " << sensorName << "\n";
+        return;
+    }
+
+    map<int, size_t> freq;
+
+    for (double v : values) {
+        int key = static_cast<int>(round(v));
+        freq[key]++;
+    }
+
+    cout << "\nASCII histogram for " << sensorName << "\n";
+    cout << string(40 + sensorName.size(), '-') << "\n";
+
+    cout << fixed << setprecision(1);
+
+    for (const auto& entry : freq) {
+        int rounded = entry.first;
+        size_t count = entry.second;
+
+        //bygger samling av * baserad på räkning
+        string bar(count, '*');
+
+        cout << " " << setw(5) << rounded << " " << unit << " | "
+             << bar << "\n";
+    }
 }
 
 // skriver alla lagrad mätvärde i en tabell format

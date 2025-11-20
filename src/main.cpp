@@ -87,7 +87,7 @@ void readAllSensors(const vector <Sensor>& sensors, MeasurementStorage& storage)
         double value = sensor.read();
         storage.addReading(sensor.getName(), sensor.getUnit(), value, timeStamp);
     }
-    cout << "OK Read "  << sensors.size() << " new measurement(s) at "  << timeStamp << ".\n";
+    cout << "OK! Read "  << sensors.size() << " new measurement(s) at "  << timeStamp << ".\n";
 }
 
 void showStatsForChosenSensor(const vector<Sensor> & sensors, const MeasurementStorage& storage) {
@@ -163,7 +163,10 @@ void showStatsForChosenSensor(const vector<Sensor> & sensors, const MeasurementS
          << "  "
          << (isAbove ? "!" : "")
          << "\n";
-    }   
+    }
+
+    cout << "\nASCII histogram:\n";
+    storage.printHistogram(name);   
 }
 
 void saveCSV(MeasurementStorage& storage) {
