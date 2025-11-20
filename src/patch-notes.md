@@ -1,5 +1,24 @@
 # Patch Notes
 
+## Part E2 Threshold (VG)
+
+#### E2.1 Add private members
+
+
+```cpp
+rivate:
+    SensorType _type;
+    string _name;
+    string _unit;
+    double _minValue;
+    double _maxValue;
+   
+
+    //privata egenskaper för tröskelvärde
+    double _threshold = 0.0;
+    bool _hasThreshold = false; // om anvvändaren har satt ett tröskel 
+
+```
 
 ## Part D
 #### D.4 Build menu + sensors list + loop

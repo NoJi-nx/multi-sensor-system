@@ -227,7 +227,7 @@ int main()
     srand(static_cast<unsigned int>(time(nullptr)));
 
     //testa timestamp
-    cout << "Current time: " << currentTimeStamp <<"\n";
+    cout << "Current time: " << currentTimeStamp() <<"\n";
 
     // konfigurera sesnorerna -- Del A
     // definiera sensorerna
