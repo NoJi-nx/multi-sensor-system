@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -29,8 +30,9 @@ class AlarmManager {
     public:
         void setThreshold(const Threshold& t);
         void clearThresholdFor(const string& sensorName);
-        void hasThresholdFor(const string& sensorName) const;  
-        const Threshold* getThresholdFor(const string& sensorName); 
+
+        bool hasThresholdFor(const string& sensorName) const;  
+        const Threshold* getThresholdFor(const string& sensorName) const; 
 
         void check(const string& sensorName,
                    double value,

@@ -1,6 +1,7 @@
 #include "AlarmManager.h"
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 
 using namespace std;
 
@@ -28,24 +29,25 @@ bool AlarmManager::hasThresholdFor(const string& sensorName) const {
     return getThresholdFor(sensorName) != nullptr;
 }
 
-const Threshold* AlarmManager::getThresholdFor(const string & sensorName) const {
+const Threshold* AlarmManager::getThresholdFor(const string& sensorName) const {
     for (const auto& t: _thresholds) {
         if (t.sensorName == sensorName) return &t;
     }
     return nullptr;
+}
 
 void AlarmManager::check(const string& sensorName,
                          double value,
                          const string& unit,
-                         const string timeStamp)
+                         const string& timeStamp)
     {
         const Threshold* t = getThresholdFor(sensorName);
         if (!t) return;
 
         bool triggered = (t->over && value > t->limit) ||
-                         (!t-> over && value < t->limit);
+                         (!t->over && value < t->limit);
          
-        if (triggered){
+        if (triggered) {
             _alarms.push_back(AlarmEvent{
                 timeStamp,
                 sensorName,
@@ -56,7 +58,7 @@ void AlarmManager::check(const string& sensorName,
             });
         }
     }                        
-}
+
 
 void AlarmManager::printAlarms() const {
     if (_alarms.empty()) {
