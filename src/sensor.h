@@ -35,6 +35,10 @@ public:
     virtual double read() = 0;
     virtual string name() const = 0;
     virtual string unit() const = 0;
+      
+    virtual void setThreshold(double value) = 0;
+    virtual bool hasThreshold() const = 0;
+    virtual double getThreshold() const = 0;
 
 
     // konstruktor

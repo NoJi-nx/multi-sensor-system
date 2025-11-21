@@ -106,6 +106,7 @@ void showStatsForChosenSensor(const vector<unique_ptr<Sensor>>& sensors, const M
 
     int idx = chooseSensorByNumber(sensors);
     if (idx < 0) { cout << "Canceled.\n"; return; }
+
     const Sensor& sensor = *sensors[idx];
     string name = sensor.name();
 
@@ -137,7 +138,7 @@ void showStatsForChosenSensor(const vector<unique_ptr<Sensor>>& sensors, const M
 
     cout << "\nThreshold analysis for '" << name << "'\n";
     cout << "-----------------------------------\n";
-    cout << "Threshold: " << threshold << " " << sensor.getUnit() << "\n";
+    cout << "Threshold: " << threshold << " " << sensor.unit() << "\n";
     cout << "Above threshold    : " << above << "\n";
     cout << "Below or equal value : " << belowOrEqual << "\n";
 
@@ -203,7 +204,7 @@ void loadCSV(MeasurementStorage& storage) {
 }
 
 //låter använderen välja en sensor och sätte ett tröskelvärde
-void setThresholdForSensor(vector<Sensor>& sensors) {
+void setThresholdForSensor(vector<unique_ptr<Sensor>>& sensors) {
     if (sensors.empty()) {
         cout << "No sensors available.\n";
         return;
@@ -215,8 +216,11 @@ void setThresholdForSensor(vector<Sensor>& sensors) {
         return;
     }
 
+    string name = sensors[idx]->name();
+    string unit = sensors[idx]->unit();
+
     cout << "Enter threshold value for sensor '"
-         << sensors[idx].getName() << "': ";
+         << name << "' (" << unit << "): ";
 
     double threshold;
     while (!(cin >> threshold)) {
@@ -226,10 +230,10 @@ void setThresholdForSensor(vector<Sensor>& sensors) {
 
     } cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-    sensors[idx].setThreshold(threshold);
+    sensors[idx]->setThreshold(threshold);
     cout << "Threshold set to " << threshold
-         << " " << sensors[idx].getUnit()
-         << " for sensor '" << sensors[idx].getName() << "'.\n";
+         << " " << sensors[idx]->unit()
+         << " for sensor '" << sensors[idx]->name() << "'.\n";
 }
 
 void searchMeasurements(const vector<unique_ptr<Sensor>>& sensors, const MeasurementStorage& storage) 
@@ -246,7 +250,7 @@ void searchMeasurements(const vector<unique_ptr<Sensor>>& sensors, const Measure
         return;
     }
 
-    const string& sensorName = sensors[idx].getName();
+     string sensorName = sensors[idx]->name();
 
     //efterfrågar användare för tidspunkt
     cout << "Enter FROM timestamp (YYYY-MM-DD HH:MM:SS) or press Enter for no lower limit:\n";
@@ -270,6 +274,7 @@ void autoMeasureInterval(const vector<unique_ptr<Sensor>>& sensors, MeasurementS
 {
     if (sensors.empty()) {
         cout << "No sensors configured\n";
+        return;
     }
 
     //hur ofta
@@ -293,7 +298,7 @@ void autoMeasureInterval(const vector<unique_ptr<Sensor>>& sensors, MeasurementS
 
 cin.ignore(numeric_limits<streamsize>::max(), '\n'); //rensar radslut
 
-cout << "\nStarting automatic mode:"
+cout << "\nStarting automatic mode: "
      << count << " measurement cycles, every "
      << seconds << "second(s).\n";
 
