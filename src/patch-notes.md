@@ -1,5 +1,17 @@
 # Patch Notes
 
+## Ver. 2 Task 1.1: Create abstract base class Sensor
+
+```cpp
+public:
+    //virtuell destruktor
+    virtual ~Sensor() = default;
+
+    //virtuell interface, subklasser för implementation
+    virtual double read() = 0;
+    virtual string name() const = 0;
+    virtual string unit() const = 0;
+```
 ## Part E2 Threshold (VG)
 
 #### E2.1 Add private members
