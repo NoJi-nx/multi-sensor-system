@@ -10,6 +10,10 @@
 #include <iomanip>
 #include <thread> //this_thread::sleep_for
 #include <chrono> //chrono::seconds
+#include <memory> 
+#include "TemperatureSensor.h"
+#include "HumiditySensor.h"
+#include "PressureSensor.h"
 
 using namespace std;
 
@@ -46,7 +50,7 @@ string readLine(const string &prompt)
 }
 
 //list sensorer och låt användaren använda genom nummer. -- Dominick review
-int chooseSensorByNumber(const vector<Sensor>& sensors) {
+int chooseSensorByNumber(const vector<unique_ptr<Sensor>>& sensors) {
     if (sensors.empty()) {
         cout << "No sensors available.\n";
         return -1;
@@ -54,7 +58,7 @@ int chooseSensorByNumber(const vector<Sensor>& sensors) {
 
     cout << "Available sensors:\n";
     for (size_t i = 0; i < sensors.size(); ++i) {
-        cout << " " << (i + 1) << ") " << sensors[i].getName() << "\n";
+        cout << " " << (i + 1) << ") " << sensors[i]->name() << "\n";
     }
     cout << " 0) Cancel\n";
 
@@ -77,7 +81,7 @@ int chooseSensorByNumber(const vector<Sensor>& sensors) {
 }
 
 //helpers (förslag av Dominik)
-void readAllSensors(const vector <Sensor>& sensors, MeasurementStorage& storage) {
+void readAllSensors(const vector<unique_ptr<Sensor>>& sensors, MeasurementStorage& storage) {
     if (sensors.empty()) {
         cout << "No sensors to read from.\n";
         return;
@@ -86,15 +90,15 @@ void readAllSensors(const vector <Sensor>& sensors, MeasurementStorage& storage)
     string timeStamp = currentTimeStamp();
 
     for (const auto& sensor : sensors) {
-        double value = sensor.read();
-        storage.addReading(sensor.getName(), sensor.getUnit(), value, timeStamp);
+        double value = sensor->read();
+        storage.addReading(sensor->name(), sensor->unit(), value, timeStamp);
     }
     cout << "OK! Read "  << sensors.size() << " new measurement(s) at "  << timeStamp << ".\n";
 
     
 }
 
-void showStatsForChosenSensor(const vector<Sensor> & sensors, const MeasurementStorage& storage) {
+void showStatsForChosenSensor(const vector<unique_ptr<Sensor>>& sensors, const MeasurementStorage& storage) {
     if (sensors.empty()) {
         cout << "No sensors available.\n";
         return;
@@ -102,8 +106,8 @@ void showStatsForChosenSensor(const vector<Sensor> & sensors, const MeasurementS
 
     int idx = chooseSensorByNumber(sensors);
     if (idx < 0) { cout << "Canceled.\n"; return; }
-    const Sensor& sensor = sensors[idx];
-    const string& name = sensors[idx].getName();
+    const Sensor& sensor = *sensors[idx];
+    string name = sensor.name();
 
     //vanlig statistik
     storage.printStats(name);
@@ -228,7 +232,7 @@ void setThresholdForSensor(vector<Sensor>& sensors) {
          << " for sensor '" << sensors[idx].getName() << "'.\n";
 }
 
-void searchMeasurements(const vector<Sensor>& sensors, const MeasurementStorage& storage) 
+void searchMeasurements(const vector<unique_ptr<Sensor>>& sensors, const MeasurementStorage& storage) 
 {
     if (sensors.empty()) {
         cout << "No sensors available.\n";
@@ -262,7 +266,7 @@ void searchMeasurements(const vector<Sensor>& sensors, const MeasurementStorage&
 }
 
 //automatist mätläge som läser alla sensorer var sekund & totalt gånger
-void autoMeasureInterval(const vector<Sensor>& sensors, MeasurementStorage& storage)
+void autoMeasureInterval(const vector<unique_ptr<Sensor>>& sensors, MeasurementStorage& storage)
 {
     if (sensors.empty()) {
         cout << "No sensors configured\n";
@@ -316,11 +320,12 @@ int main()
     //testa timestamp
     cout << "Current time: " << currentTimeStamp() <<"\n";
 
-    // konfigurera sesnorerna -- Del A
-    // definiera sensorerna
-    vector<Sensor> sensors;
-    sensors.emplace_back(SensorType::Temperature, "Temperature 1", "°C", -10.0, 40.0);
-    sensors.emplace_back(SensorType::Humidity, "Humidity 1", "%", 0.0, 100.0);
+    // konfigurera & definiera sesnorerna -- Del A
+    // lagra genom polymorfism
+    vector<unique_ptr<Sensor>> sensors;
+    sensors.push_back(make_unique<TemperatureSensor>("Temperature 1", -10.0, 40.0));
+    sensors.push_back(make_unique<HumiditySensor>("Humidity 1", 0.0, 100.0));
+    sensors.push_back(make_unique<PressureSensor>("Pressure 1", 900.0, 1100.0));
 
     // central lagring för alla mätvärden -- Del B, C & D
     MeasurementStorage storage;

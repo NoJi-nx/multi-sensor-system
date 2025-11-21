@@ -2,6 +2,27 @@
 
 ## Ver. 2 Task 1
 
+#### 1.3 Store sensors polymorphically 
+
+```cpp
+#include <memory> 
+#include "TemperatureSensor.h"
+#include "HumiditySensor.h"
+#include "PressureSensor.h"
+
+// konfigurera & definiera sesnorerna -- Del A
+// lagra genom polymorfism
+vector<unique_ptr<Sensor>> sensors;
+sensors.push_back(make_unique<TemperatureSensor
+("Temperature 1", -10.0, 40.0));
+sensors.push_back(make_unique<HumiditySensor
+("Humidity 1", 0.0, 100.0));
+sensors.push_back(make_unique<PressureSensor
+("Pressure 1", 900.0, 1100.0));
+```
+
+
+
 #### 1.2 Create subclasses
 
 * TemperatureSensor.h
