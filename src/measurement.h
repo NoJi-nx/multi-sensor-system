@@ -7,6 +7,6 @@ using namespace std;
 struct Measurement {
     string sensorName; //namn på sensoren
     string unit;    // enhet på mätvärden
-    double value;   //
+    double value;   // värde på 
     string timestamp; 
 }; 

@@ -291,6 +291,11 @@ void MeasurementStorage::printSearchResults(const string& sensorName, const stri
         if (m.sensorName != sensorName)
             continue;
 
+       //filtrera     
+        if (!fromTs.empty() && m.timestamp < fromTs)
+            continue;    
+        if (!toTs.empty() && m.timestamp > toTs)
+            continue;    
         any = true;
 
         cout << left
@@ -340,6 +345,8 @@ bool MeasurementStorage::loadToCSV(const string& filename)
         cerr << "Error! Could not open fil for reading: " << filename << "\n";
         return false;
     }
+
+    _measurements.clear(); //ersätter gammal data 
 
     string line;
     size_t added = 0, skipped = 0;
