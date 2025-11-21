@@ -318,12 +318,36 @@ cout << "\nStarting automatic mode: "
 
 }
 
+//användaren använder sensorer, sätter begräsning och riktning
 void configureThreshold(vector<unique_ptr<Sensor>>& sensors, AlarmManager& alarms)
 {
     int idx = chooseSensorByNumber(sensors);
     if (idx < 0) { cout << "Canceled.\n"; return; }
 
-    string name = sensors[idx] ->
+    string name = sensors[idx]->name();
+    string unit = sensors[idx]->unit();
+
+    cout << "Set threshold for '" << name << "' (" << unit << ")\n";
+    cout << "Enter limit: ";
+
+    double limit;
+    while (!(cin >> limit)) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Wrong number. Try again: ";
+    }
+
+    cout << "Alarm direction?\n";
+    cout << "1) Alarm if value is ABOVE limit\n";
+    cout << "2) Alarm if value is BELOW limit\n";
+    int dir = menuChoice(1, 2);
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    alarms.setThreshold(Threshold{name, limit, dir==1});
+    cout << "Threshold set: " << name
+         << (dir==1 ? " > " : " < ")
+         << limit << " " << unit << "\n";
 }
 
 int main()
