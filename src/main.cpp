@@ -14,6 +14,7 @@
 #include "TemperatureSensor.h"
 #include "HumiditySensor.h"
 #include "PressureSensor.h"
+#include "AlarmManager.h"
 
 using namespace std;
 
@@ -81,7 +82,7 @@ int chooseSensorByNumber(const vector<unique_ptr<Sensor>>& sensors) {
 }
 
 //helpers (förslag av Dominik)
-void readAllSensors(const vector<unique_ptr<Sensor>>& sensors, MeasurementStorage& storage) {
+void readAllSensors(const vector<unique_ptr<Sensor>>& sensors, MeasurementStorage& storage, AlarmManager& alarms) {
     if (sensors.empty()) {
         cout << "No sensors to read from.\n";
         return;
@@ -305,7 +306,7 @@ cout << "\nStarting automatic mode: "
      for (int i =1; i <=count; i++){
          cout << "\n--- Cycle " << i <<" / " << count << "---\n";
          //använder helpern
-         readAllSensors(sensors, storage);
+         readAllSensors(sensors, storage, alarmManager);
 
          if (i < count) {
              cout << "Waiting " << seconds << " second(s)...\n";
@@ -315,6 +316,14 @@ cout << "\nStarting automatic mode: "
 
      cout << "\nAutomatic measurement finished.\n";
 
+}
+
+void configureThreshold(vector<unique_ptr<Sensor>>& sensors, AlarmManager& alarms)
+{
+    int idx = chooseSensorByNumber(sensors);
+    if (idx < 0) { cout << "Canceled.\n"; return; }
+
+    string name = sensors[idx] ->
 }
 
 int main()
@@ -334,6 +343,7 @@ int main()
 
     // central lagring för alla mätvärden -- Del B, C & D
     MeasurementStorage storage;
+    AlarmManager alarmManager;
 
     // meny loop -- Del D
     while (true)
