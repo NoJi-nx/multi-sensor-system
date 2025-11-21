@@ -9,4 +9,4 @@ struct Measurement {
     string unit;    // enhet på mätvärden
     double value;   //
     string timestamp; 
-};
+}; 

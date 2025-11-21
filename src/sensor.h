@@ -5,14 +5,16 @@
 
 using namespace std;
 
+/*
 enum class SensorType{
     Temperature, 
     Humidity,
     Unknown
 };
-// deklarera  sesnor data
+// deklarera  sesnor data */
 class Sensor
 {
+/*    
 private:
     SensorType _type;
     string _name;
@@ -23,12 +25,21 @@ private:
 
     //privata egenskaper för tröskelvärde
     double _threshold = 0.0;
-    bool _hasThreshold = false; // om anvvändaren har satt ett tröskel 
+    bool _hasThreshold = false; // om anvvändaren har satt ett tröskel */
 
 public:
+    //virtuell destruktor
+    virtual ~Sensor() = default;
+
+    //virtuell interface, subklasser för implementation
+    virtual double read() = 0;
+    virtual string name() const = 0;
+    virtual string unit() const = 0;
+
+
     // konstruktor
     // skapar en sensor och visar namn, enhet och range
-    Sensor(SensorType type, const string& name, const string& unit, double minValue, double maxValue);
+    /*Sensor(SensorType type, const string& name, const string& unit, double minValue, double maxValue);
 
     // metod för simulera sensor och ta mätvärden från sensor inom range
     double read() const;
@@ -51,5 +62,5 @@ public:
     //hämtar tröskel
     double getThreshold() const {
         return _threshold;
-    }
+    }*/
 };

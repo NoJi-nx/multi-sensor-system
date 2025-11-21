@@ -57,14 +57,12 @@ private:
 
     //skriver ut mätvärrden som är filterad av sensors namn
     void printSearchResults ( const string& sensorName, const string& fromTs, const string& toTs) const;
-    
+
     //antal lagrade mätvärden
     size_t size() const noexcept {return _measurements.size(); }
 
     //read-only för få tillgång till rådata 
     const vector<Measurement>& data() const { return _measurements; }
-
-
 
    //file I/O (CSV) 
    //sparar till CSV
