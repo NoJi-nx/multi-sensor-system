@@ -3,18 +3,16 @@
 #pragma once
 
 using namespace std;
-
-class TemperatureSensor : public Sensor {
-private:
+class PressureSensor : public Sensor {
+private: 
     string _id;
     double _minV;
-    double _maxV; 
+    double _maxV;
 
 public:
-    TemperatureSensor(const string& id, double minV, double maxV);
+    PressureSensor(const string& id, double minV, double maxV);
 
     double read() override; //implementerar Sensor::read()
     string  name() const override;
     string unit() const override;
-
 };

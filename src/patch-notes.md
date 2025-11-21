@@ -1,6 +1,139 @@
 # Patch Notes
 
-## Ver. 2 Task 1.1: Create abstract base class Sensor
+## Ver. 2 Task 1
+
+#### 1.2 Create subclasses
+
+* TemperatureSensor.h
+```cpp
+class TemperatureSensor : public Sensor {
+private:
+    string _id;
+    double _minV;
+    double _maxV; 
+
+public:
+    TemperatureSensor(const string& id, double minV, double maxV);
+
+    double read() override; //implementerar Sensor::read()
+    string  name() const override;
+    string unit() const override;
+
+};
+```
+
+* TemperatureSensor.cpp
+```cpp
+TemperatureSensor::TemperatureSensor(const string& id, double minV, double maxV)
+    : _id(id), _minV(minV), _maxV(maxV)
+{
+    if (minV >= maxV) {
+        throw invalid_argument("TemperatureSensor: minV must be < maxV");
+
+    }
+}
+
+double TemperatureSensor::read() {
+     double r = static_cast<double>(rand()) / RAND_MAX; // 0.1
+     return _minV + r * (_maxV - _minV);
+}
+
+string TemperatureSensor::name() const {
+    return _id;
+}
+
+string TemperatureSensor::unit() const {
+    return "°C";
+}
+  
+```
+
+* HumiditySensor.h
+```cpp
+class HumiditySensor : public Sensor {
+private: 
+    string _id;
+    double _minV;
+    double _maxV;
+
+
+public:
+    HumiditySensor(const string& id, double minV, double maxV);
+
+    double read() override;
+    string name() const override;
+    string unit() const override;
+    
+};
+```
+
+* HumiditySensor.cpp
+```cpp
+HumiditySensor::HumiditySensor(const string& id, double minV, double maxV)
+    : _id(id), _minV(minV), _maxV(maxV)
+{
+    if (minV >= maxV) {
+        throw invalid_argument("HumiditySensor: minV must be < maxV");
+
+    }
+} 
+
+double HumiditySensor::read() {
+    double r = static_cast<double>(rand()) / RAND_MAX;
+    return _minV + r * (_maxV - _minV);
+}
+
+string HumiditySensor::name() const {
+    return _id;
+}
+
+string HumiditySensor::unit() const {
+    return "%";
+}
+```
+
+* PressureSensor.h
+```cpp
+class PressureSensor : public Sensor {
+private: 
+    string _id;
+    double _minV;
+    double _maxV;
+
+public:
+    PressureSensor(const string& id, double minV, double maxV);
+
+    double read() override; //implementerar Sensor::read()
+    string  name() const override;
+    string unit() const override;
+};
+
+```
+
+* PressureSensor.cpp
+```cpp
+PressureSensor::PressureSensor(const string& id, double minV, double maxV)
+    : _id(id), _minV(minV), _maxV(maxV)
+{
+    if (minV >= maxV) {
+        throw invalid_argument("PressureSensor: minV must be < maxV");
+
+    }
+} 
+double PressureSensor::read() {
+    double r = static_cast<double>(rand()) / RAND_MAX;
+    return _minV + r * (_maxV - _minV);
+}
+
+string PressureSensor::name() const {
+    return _id;
+}
+
+string PressureSensor::unit() const {
+    return "hPA";
+}
+```
+#### 1.1 Create abstract base class Sensor
 
 ```cpp
 public:
