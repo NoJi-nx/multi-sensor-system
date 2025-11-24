@@ -22,7 +22,7 @@ using namespace std;
 // rensar och återhämtar från fel input
 int menuChoice(int min, int max)
 {
-    while (true)
+    whileu (true)
     {
         cout << "\nChoose (" << min << "-" << max << "): ";
         int choice;
